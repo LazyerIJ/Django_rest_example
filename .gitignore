@@ -1,0 +1,13 @@
+# database
+db.sqlite3
+
+# test request
+*.rest
+
+# cache
+.pytest_cache
+__pycache__
+
+# venv
+.vscode
+
