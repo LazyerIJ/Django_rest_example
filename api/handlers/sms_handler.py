@@ -14,14 +14,14 @@ class NaverSMSHandler:
         url = 'https://sens.apigw.ntruss.com'
         uri = '/sms/v2/services/' + service_id + '/messages'
         api_url = url + uri
-        res = requests.post(url=api_url, json=self._get_header(self.phone_number), headers=self._get_header(uri))
+        res = requests.post(url=api_url, json=self._get_body(self.phone_number), headers=self._get_header(uri))
         return res
 
     def _get_body(self, phone_number):
         body = {
             "type": "SMS",
             "contentType": "COMM",
-            "from": get_secret_value("from_number"),
+            "from": get_secret_value("phone_number"),
             "content": "[테스트서버 인증] 안녕하세요. 테스트 서버 회원등록 서비스입니다. [{}]를 입력해주세요.".format(self.auth_number),
             "messages": [{"to": phone_number}]
         }
