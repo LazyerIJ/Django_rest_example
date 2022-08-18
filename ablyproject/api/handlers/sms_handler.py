@@ -14,7 +14,7 @@ class NaverSMSHandler:
         url = 'https://sens.apigw.ntruss.com'
         uri = '/sms/v2/services/' + service_id + '/messages'
         api_url = url + uri
-        res = requests.post(url=api_url, json=self._get_body(self.phone_number), headers=self._get_header(uri))
+        res = requests.post(url=api_url, json=self._get_body(), headers=self._get_header(uri))
         return res
 
     def _get_body(self):
