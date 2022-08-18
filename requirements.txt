@@ -1,1 +1,2 @@
 django-model-utils==4.2.0
+django-session-timeout
