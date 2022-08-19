@@ -5,25 +5,33 @@ from api.utils import make_sms_signature
 
 
 class NaverSMSHandler:
+    '''
+    SMS 문자 인증 Handler
+    :param phone_number: 대상 휴대폰 번호
+    :param auth_number: 대상 인증 번호
+    '''
     def __init__(self, phone_number, auth_number):
         self.phone_number = phone_number
         self.auth_number = auth_number
 
-    def send_sms(self):
+    def send_sms(self, auth_number=None):
+        '''
+        문자 발송 및 발송 결과 반환
+        '''
         service_id = get_secret_value("service_id")
         url = 'https://sens.apigw.ntruss.com'
         uri = '/sms/v2/services/' + service_id + '/messages'
         api_url = url + uri
-        res = requests.post(url=api_url, json=self._get_header(self.phone_number), headers=self._get_header(uri))
+        res = requests.post(url=api_url, json=self._get_body(), headers=self._get_header(uri))
         return res
 
-    def _get_body(self, phone_number):
+    def _get_body(self):
         body = {
             "type": "SMS",
             "contentType": "COMM",
-            "from": get_secret_value("from_number"),
+            "from": get_secret_value("phone_number"),
             "content": "[테스트서버 인증] 안녕하세요. 테스트 서버 회원등록 서비스입니다. [{}]를 입력해주세요.".format(self.auth_number),
-            "messages": [{"to": phone_number}]
+            "messages": [{"to": self.phone_number}]
         }
         return body
 

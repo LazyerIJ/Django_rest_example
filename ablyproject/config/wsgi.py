@@ -11,6 +11,13 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+
+from config.utils import get_config_value
+
+
+if get_config_value("ACCESS_TYPE") == "dev":
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ablyproject.config.settings.dev')
+else:
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ablyproject.config.settings.service')
 
 application = get_wsgi_application()

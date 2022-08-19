@@ -2,11 +2,15 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from config.utils import get_config_value
 
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+    if get_config_value("ACCESS_TYPE") == "dev":
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.dev')
+    else:
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.service')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
