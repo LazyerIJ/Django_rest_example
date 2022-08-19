@@ -13,9 +13,12 @@ from config.utils import get_config_value
 ACCESS_TYPE = get_config_value("ACCESS_TYPE")
 
 from pathlib import Path
+from config.settings import logging
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+LOGGING = logging.LOGGING
 
 
 # Quick-start development settings - unsuitable for production

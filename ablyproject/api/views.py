@@ -35,18 +35,20 @@ class UserSignupView(APIView):
         is_exists, _ = User.is_exists_phone_number(phone_number)
         if is_exists:
             error = errors.AblyErrorUserDuplicated()
-            logging.info(get_logger_msg_from_ably_error(error, phone_number))
+            LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
         
         # request -> 사용자 로그인 정보 검증 
         user_serializer = UserSerializer(data=request.data) 
         if not user_serializer.is_valid():
+            LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             error = errors.AblyErrorInvalidInput(params="")
             return ResponseHandler.response_error(error)
 
         # request -> 사용자 일반 정보 검증
         user_info_serializer = UserInfoSerializer(data=request.data) 
         if not user_info_serializer.is_valid():
+            LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             error = errors.AblyErrorInvalidInput(params="")
             return ResponseHandler.response_error(error)
 
@@ -60,6 +62,7 @@ class UserSignupView(APIView):
         result = naver_sms_handler.send_sms() if get_config_value("ACCESS_KEY") == "service" else True
         if not result:
             error = errors.AblyErrorSMSSendFail()
+            LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
     
         # 사용자 로그인 정보 및 일반 정보 저장 
@@ -67,6 +70,7 @@ class UserSignupView(APIView):
         user_info_serializer.validated_data['user'] = user
         user_info_serializer.save()
         error = errors.AblyErrorSMSSendSuccess()
+        LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
         return ResponseHandler.response_success(error)
     
     @transaction.atomic
@@ -81,6 +85,7 @@ class UserSignupView(APIView):
         is_exists, user = User.is_exists_phone_number(phone_number)
         if not is_exists:
             error = errors.AblyErrorUserNotExists()
+            LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
         
         # 비밀번호 재설정 
@@ -96,9 +101,11 @@ class UserSignupView(APIView):
         result = naver_sms_handler.send_sms()
         if not result:
             error = errors.AblyErrorSMSSendFail()
+            LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
         
         error = errors.AblyErrorSMSSendSuccess()
+        LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
         return ResponseHandler.response_success(error)
         
         
@@ -124,6 +131,7 @@ class UserAuthView(APIView):
         # 미일치 시 에러 반환
         if not result:
             error = errors.AblyErrorSMSAuthFail()
+            LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
         
         # 일치 시 사용자 로그인 정보의 verified를 True로 업데이트 
@@ -133,6 +141,7 @@ class UserAuthView(APIView):
             user.save()
             
         error = errors.AblyErrorSMSAuthSuccess()
+        LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
         return ResponseHandler.response_success(error)
 
 
@@ -154,26 +163,31 @@ class UserLoginView(APIView):
         is_exists, user = User.is_exists_phone_number(phone_number)
         if not is_exists:
             error = errors.AblyErrorUserNotExists()
+            LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
         
         # password 일치 확인 
         if not user.check_password(password):
             error = errors.AblyErrorUserWrongPassword()
+            LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
         
         # 문자 인증 정보 확인 
         if not user.verified:
             error = errors.AblyErrorSMSAuthNeeded()
+            LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
         
         # 이미 로그인 되어있는지 확인 
         if user.is_login(request):
             error = errors.AblyErrorAlreadyLogin()
+            LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
         
         # 로그인 수행 
         user.login(request)
         error = errors.AblyErrorLoginSuccess()
+        LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
         return ResponseHandler.response_success(error)
     
     
@@ -195,21 +209,25 @@ class UserLogoutView(APIView):
         is_exists, user = User.is_exists_phone_number(phone_number)
         if not is_exists:
             error = errors.AblyErrorUserNotExists()
+            LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
         
         # 비밀번호 일치 확인 
         if not user.check_password(password):
             error = errors.AblyErrorUserWrongPassword()
+            LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
         
         # 로그인 여부 확인 
         if not user.is_login(request):
             error = errors.AblyErrorAlreadyLogout() 
+            LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
         
         # 로그아웃 진행 
         user.logout(request)
         error = errors.AblyErrorLogoutSuccess()
+        LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
         return ResponseHandler.response_success(error)
 
 
@@ -231,15 +249,18 @@ class UserInfoDetailView(APIView):
         is_exists, user = User.is_exists_phone_number(phone_number)
         if not is_exists:
             error = errors.AblyErrorUserNotExists()
+            LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
         
         # 로그인 여부 확인 
         if not user.is_login(request):
             error = errors.AblyErrorNeedLogin()
+            LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
         
         # 사용자 정보 반환 
         user_info = UserInfoDetailView.queryset.get(user=user)
         serializer = UserInfoSerializer(user_info)
         error = errors.AblyErrorServiceOK()
+        LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
         return ResponseHandler.response_created(serializer.data, error)

@@ -12,4 +12,4 @@ def make_sms_signature(string, secret_key):
 
 
 def get_logger_msg_from_ably_error(error, phone_number):
-    return f"[{phone_number}][{error.code}][{error.detail}]"
+    return f"[{phone_number: <11}][{error.info.code: <6}]{error.detail}"

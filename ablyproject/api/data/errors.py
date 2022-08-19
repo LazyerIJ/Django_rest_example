@@ -157,7 +157,7 @@ class AblyErrorSMSAuthFail(AblyError):
     
     def __init__(self, params=None):
         super().__init__(params)
-        self.detail = "SMS 인증에 실패하였습니다."
+        self.detail = "SMS 문자인증에 실패하였습니다."
         
         
 class AblyErrorSMSAuthSuccess(AblyError):
@@ -168,7 +168,7 @@ class AblyErrorSMSAuthSuccess(AblyError):
     
     def __init__(self, params=None):
         super().__init__(params)
-        self.detail = "SMS 인증에 성공하였습니다."
+        self.detail = "SMS 문자인증에 성공하였습니다."
         
         
 class AblyErrorSMSAuthNeeded(AblyError):
@@ -179,4 +179,4 @@ class AblyErrorSMSAuthNeeded(AblyError):
     
     def __init__(self, params=None):
         super().__init__(params)
-        self.detail = "SMS 인증이 필요합니다."
+        self.detail = "SMS 문자인증이 필요합니다."

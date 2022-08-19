@@ -5,6 +5,9 @@ from rest_framework import status
 class APIUserTests(TestCase):
     
     def do_user_info_get(self, client):
+        curl = '''curl --location \
+            --request GET "http://127.0.0.1:8000/api/user?phone_number=01012341234" \
+            --data-raw ""'''
         data = {
             "phone_number": "01012341234"
         }
@@ -13,6 +16,13 @@ class APIUserTests(TestCase):
         return response
         
     def do_user_login(self, client):
+        curl = '''curl --location \
+                --request POST "http://127.0.0.1:8000/api/login/" \
+                --header "Content-Type: application/json" \
+                --data-raw "{
+                \"phone_number\": \"01012341234\",
+                \"password\": \"4321\"
+                }"'''
         data = {
             "phone_number": "01012341234",
             "password": "1234"
@@ -22,6 +32,13 @@ class APIUserTests(TestCase):
         return response
     
     def do_user_login_with_wrong_password(self, client):
+        curl = '''curl --location \
+                --request POST "http://127.0.0.1:8000/api/login/" \
+                --header "Content-Type: application/json" \
+                --data-raw "{
+                \"phone_number\": \"01012341234\",
+                \"password\": \"4321\"
+                }"'''
         data = {
             "phone_number": "01012341234",
             "password": "4321"
@@ -31,6 +48,13 @@ class APIUserTests(TestCase):
         return response
     
     def do_user_logout(self, client):
+        curl = '''curl --location \
+                --request POST "http://127.0.0.1:8000/api/logout/" \
+                --header "Content-Type: application/json" \
+                --data-raw "{
+                \"phone_number\": \"01012341234\",
+                \"password\": \"1234\"
+                }"'''
         data = {
             "phone_number": "01012341234",
             "password": "1234"
@@ -40,18 +64,34 @@ class APIUserTests(TestCase):
         return response
     
     def do_user_signup(self, client):
+        curl = '''curl --location \
+                --request POST "http://127.0.0.1:8000/api/signup/" \
+                --header "Content-Type: application/json" \
+                --data-raw "{
+                \"phone_number\": \"01012341234\",
+                \"password\": \"1234\",
+                \"email\": \"ablyproject@gmail.com\",
+                \"nickname\": \"lazyer\",
+                \"name\": \"123\"
+                }"'''
         data = {
             "phone_number": "01012341234",
             "password": "1234",
             "email": "ablyproject@gmail.com",
             "nickname": "lazyer",
-            "name": "홍길동"
+            "name": "KimInJu"
         }
         response = client.post("/api/signup/", data=data, follow=True)
         print('>>do_user_signup: ', response.status_code, response.data.get('detail'))
         return response
     
     def do_user_auth(self, client):
+        curl = '''curl --location --request POST "http://127.0.0.1:8000/api/auth/" \
+                --header "Content-Type: application/json" \
+                --data-raw "{
+                \"phone_number\": \"01012341234\",
+                \"auth_number\": \"0000\"
+                }"'''
         data = {
             "phone_number": "01012341234",
             "auth_number": "0000"

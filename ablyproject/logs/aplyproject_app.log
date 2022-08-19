@@ -1,0 +1,5 @@
+[2022/08/19 22:37:02][WARNING][django.request:241 ]Bad Request: /api/login/
+[2022/08/19 22:37:02][WARNING][django.request:241 ]Bad Request: /api/user/
+[2022/08/19 22:37:03][WARNING][django.request:241 ]Bad Request: /api/login/
+[2022/08/19 22:37:04][WARNING][django.request:241 ]Bad Request: /api/logout/
+[2022/08/19 22:37:04][WARNING][django.request:241 ]Bad Request: /api/login/

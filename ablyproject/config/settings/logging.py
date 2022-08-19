@@ -20,7 +20,7 @@ LOGGING = {
             'datefmt': '%Y/%m/%d %H:%M:%S'
         },
         'standard': {
-            'format': '[%(asctime)s][%(levelname)s][%(name)s:%(lineno)s]%(message)s',
+            'format': '[%(asctime)s][%(levelname)s][%(name)-5s:%(lineno)-4s]%(message)s',
             'datefmt': '%Y/%m/%d %H:%M:%S'
         },
     },
