@@ -1,5 +1,22 @@
-[2022/08/19 22:37:02][WARNING][django.request:241 ]Bad Request: /api/login/
-[2022/08/19 22:37:02][WARNING][django.request:241 ]Bad Request: /api/user/
-[2022/08/19 22:37:03][WARNING][django.request:241 ]Bad Request: /api/login/
-[2022/08/19 22:37:04][WARNING][django.request:241 ]Bad Request: /api/logout/
-[2022/08/19 22:37:04][WARNING][django.request:241 ]Bad Request: /api/login/
+[2022/08/19 22:46:52][INFO][django.utils.autoreload:266 ]D:\lazyer\busincess\ably\ablyproject\ablyproject\api\utils.py changed, reloading.
+[2022/08/19 22:46:53][INFO][django.utils.autoreload:677 ]Watching for file changes with StatReloader
+[2022/08/19 22:46:56][INFO][django.utils.autoreload:266 ]D:\lazyer\busincess\ably\ablyproject\ablyproject\api\utils.py changed, reloading.
+[2022/08/19 22:46:57][INFO][django.utils.autoreload:677 ]Watching for file changes with StatReloader
+[2022/08/19 22:46:59][INFO][django.utils.autoreload:266 ]D:\lazyer\busincess\ably\ablyproject\ablyproject\api\utils.py changed, reloading.
+[2022/08/19 22:47:00][INFO][django.utils.autoreload:677 ]Watching for file changes with StatReloader
+[2022/08/19 22:47:35][INFO][django.utils.autoreload:266 ]D:\lazyer\busincess\ably\ablyproject\ablyproject\api\utils.py changed, reloading.
+[2022/08/19 22:47:36][INFO][django.utils.autoreload:677 ]Watching for file changes with StatReloader
+[2022/08/19 22:48:00][INFO][django.utils.autoreload:266 ]D:\lazyer\busincess\ably\ablyproject\ablyproject\api\utils.py changed, reloading.
+[2022/08/19 22:48:01][INFO][django.utils.autoreload:677 ]Watching for file changes with StatReloader
+[2022/08/19 22:48:03][WARNING][django.request:241 ]Bad Request: /api/login/
+[2022/08/19 22:48:03][WARNING][django.request:241 ]Bad Request: /api/user/
+[2022/08/19 22:48:04][WARNING][django.request:241 ]Bad Request: /api/login/
+[2022/08/19 22:48:05][WARNING][django.request:241 ]Bad Request: /api/logout/
+[2022/08/19 22:48:05][WARNING][django.request:241 ]Bad Request: /api/login/
+[2022/08/19 22:48:19][INFO][django.utils.autoreload:266 ]D:\lazyer\busincess\ably\ablyproject\ablyproject\api\utils.py changed, reloading.
+[2022/08/19 22:48:20][INFO][django.utils.autoreload:677 ]Watching for file changes with StatReloader
+[2022/08/19 22:48:24][WARNING][django.request:241 ]Bad Request: /api/login/
+[2022/08/19 22:48:24][WARNING][django.request:241 ]Bad Request: /api/user/
+[2022/08/19 22:48:25][WARNING][django.request:241 ]Bad Request: /api/login/
+[2022/08/19 22:48:26][WARNING][django.request:241 ]Bad Request: /api/logout/
+[2022/08/19 22:48:26][WARNING][django.request:241 ]Bad Request: /api/login/

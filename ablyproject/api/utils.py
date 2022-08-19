@@ -2,6 +2,7 @@ import hmac
 import base64
 import hashlib
 from api.const import NOT_EXISTS_PHONE_NUMBER, NOT_EXISTS_NAME
+import versions
 
 
 def make_sms_signature(string, secret_key):
@@ -12,4 +13,4 @@ def make_sms_signature(string, secret_key):
 
 
 def get_logger_msg_from_ably_error(error, phone_number):
-    return f"[{phone_number: <11}][{error.info.code: <6}]{error.detail}"
+    return f"[{versions.__version__: <5}][{phone_number: <11}][{error.info.code: <6}]{error.detail}"
