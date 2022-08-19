@@ -1,0 +1,14 @@
+version: '3.6'
+
+services:
+  app:
+    build:
+      context: .
+    image: ablyproject:latest
+    container_name: ablyproject_lazyer 
+    entrypoint: gunicorn
+    command: --reload --workers=5 --threads=2 --max-requests 1000 --bind 0.0.0.0:8000 ablyproject.config.wsgi
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app/ablyproject/

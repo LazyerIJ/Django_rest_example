@@ -3,8 +3,10 @@ from random import randint
 from django.db import models
 from django.utils import timezone
 from model_utils.models import TimeStampedModel
-from django.contrib.auth.models import AbstractBaseUser, AnonymousUser
 from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, AnonymousUser
+
+from config.utils import get_config_value
 
 
 class AblyUserManager(BaseUserManager):
@@ -34,7 +36,8 @@ class User(AbstractBaseUser):
     
     objects = AblyUserManager()
     
-    def check_is_exists_phone_number(self, phone_number):
+    @staticmethod
+    def is_exists_phone_number(phone_number):
         users = User.objects.filter(phone_number=phone_number)
         return (True, users[0]) if users else (False, None)
     
@@ -78,6 +81,8 @@ class UserAuth(TimeStampedModel):
 
     def save(self, *args, **kwargs):
         self.auth_number = randint(1000, 10000)
+        if get_config_value("ACCESS_TYPE") == "dev":
+            self.auth_number = "0000"
         super().save(*args, **kwargs)
         
     @classmethod

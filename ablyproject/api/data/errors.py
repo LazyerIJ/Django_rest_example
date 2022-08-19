@@ -61,6 +61,17 @@ class AblyErrorUserNotExists(AblyError):
         self.detail = "존재하지 않는 사용자입니다."
         
         
+class AblyErrorUserWrongPassword(AblyError):
+    info = AblyErrorInfo(
+        code="100003", 
+        keyword="ABLY_ERROR_USER_WRONG_PASSWORd"
+    )
+    
+    def __init__(self, params=None):
+        super().__init__(params)
+        self.detail = "패스워드가 잘못 입력되었습니다."
+        
+        
 class AblyErrorLoginSuccess(AblyError):
     info = AblyErrorInfo(
         code="101001", 
@@ -107,7 +118,7 @@ class AblyErrorAlreadyLogout(AblyError):
         
 class AblyErrorNeedLogin(AblyError):
     info = AblyErrorInfo(
-        code="101002", 
+        code="101005", 
         keyword="ABLY_ERROR_NEED_LOGIN"
     )
     
@@ -158,3 +169,14 @@ class AblyErrorSMSAuthSuccess(AblyError):
     def __init__(self, params=None):
         super().__init__(params)
         self.detail = "SMS 인증에 성공하였습니다."
+        
+        
+class AblyErrorSMSAuthNeeded(AblyError):
+    info = AblyErrorInfo(
+        code="102004", 
+        keyword="ABLY_ERROR_SMS_AUTH_NEEDED"
+    )
+    
+    def __init__(self, params=None):
+        super().__init__(params)
+        self.detail = "SMS 인증이 필요합니다."

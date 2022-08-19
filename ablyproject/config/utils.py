@@ -1,10 +1,12 @@
 import os
 import json
-from config.settings import BASE_DIR
+from pathlib import Path
 
 
-DEPLOY_DIR = os.path.join(BASE_DIR, "config", "deploy")
+PACKAGE_PATH = Path(__file__).parent.parent.absolute()
+DEPLOY_DIR = os.path.join(PACKAGE_PATH, "config", "deploy")
 SECRET_FPATH = os.path.join(os.path.join(DEPLOY_DIR, "secret.json"))
+CONFIG_FPATH = os.path.join(os.path.join(DEPLOY_DIR, "config.json"))
 
 
 if os.path.exists(SECRET_FPATH):
@@ -14,5 +16,16 @@ else:
     SECRET_DATA = dict()
 
 
+if os.path.exists(CONFIG_FPATH):
+    with open(CONFIG_FPATH, "r") as f:
+        CONFIG_DATA = json.load(f)
+else:
+    CONFIG_DATA = dict()
+
+
 def get_secret_value(key, na_str=""):
     return SECRET_DATA.get(key, na_str)
+
+
+def get_config_value(key, na_str=""):
+    return CONFIG_DATA.get(key, na_str)

@@ -11,7 +11,7 @@ class ResponseHandler:
         pass
 
     @staticmethod
-    def response_success(self, ably_error=AblyErrorServiceOK()):
+    def response_success(ably_error=AblyErrorServiceOK()):
         return Response(
             data={
                 "error_code": ably_error.info.code,
@@ -21,7 +21,7 @@ class ResponseHandler:
             status=status.HTTP_200_OK)
     
     @staticmethod
-    def response_created(self, data, ably_error=AblyErrorServiceOK()):
+    def response_created(data, ably_error=AblyErrorServiceOK()):
         return Response(
             data={
                 "error_code": ably_error.info.code,
@@ -32,7 +32,7 @@ class ResponseHandler:
             status=status.HTTP_201_CREATED)
     
     @staticmethod
-    def response_error(self, ably_error):
+    def response_error(ably_error):
         return Response(
             data={
                 "error_code": ably_error.info.code,

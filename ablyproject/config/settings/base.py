@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+from config.utils import get_config_value
+ACCESS_TYPE = get_config_value("ACCESS_TYPE")
 
 from pathlib import Path
 
@@ -107,11 +109,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 SESSION_EXPIRE_SECONDS = 30
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True

@@ -14,7 +14,7 @@ class NaverSMSHandler:
         self.phone_number = phone_number
         self.auth_number = auth_number
 
-    def send_sms(self):
+    def send_sms(self, auth_number=None):
         '''
         문자 발송 및 발송 결과 반환
         '''

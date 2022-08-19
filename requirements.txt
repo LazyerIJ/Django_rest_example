@@ -1,2 +1,6 @@
-django-model-utils==4.2.0
+requests
+django~=2.2
+gunicorn~=19.9
+djangorestframework
 django-session-timeout
+django-model-utils==4.2.0

@@ -1,3 +1,7 @@
+def get_phone_number_from_params(request):
+    return request.query_params["phone_number"]   
+
+
 def get_phone_number_from_request(request):
     return request.data.get("phone_number", "")
 

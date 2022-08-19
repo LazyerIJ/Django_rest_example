@@ -10,7 +10,12 @@ https://docs.djangoproject.com/en/4.1/howto/deployment/asgi/
 import os
 
 from django.core.asgi import get_asgi_application
+from config.utils import get_config_value
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ablyproject.config.settings')
+
+if get_config_value("ACCESS_TYPE") == "dev":
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ablyproject.config.settings.dev')
+else:
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ablyproject.config.settings.service')
 
 application = get_asgi_application()
