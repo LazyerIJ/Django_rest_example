@@ -5,11 +5,19 @@ from api.utils import make_sms_signature
 
 
 class NaverSMSHandler:
+    '''
+    SMS 문자 인증 Handler
+    :param phone_number: 대상 휴대폰 번호
+    :param auth_number: 대상 인증 번호
+    '''
     def __init__(self, phone_number, auth_number):
         self.phone_number = phone_number
         self.auth_number = auth_number
 
     def send_sms(self):
+        '''
+        문자 발송 및 발송 결과 반환
+        '''
         service_id = get_secret_value("service_id")
         url = 'https://sens.apigw.ntruss.com'
         uri = '/sms/v2/services/' + service_id + '/messages'

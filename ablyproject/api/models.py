@@ -34,6 +34,10 @@ class User(AbstractBaseUser):
     
     objects = AblyUserManager()
     
+    def check_is_exists_phone_number(self, phone_number):
+        users = User.objects.filter(phone_number=phone_number)
+        return (True, users[0]) if users else (False, None)
+    
     def is_login(self, request):
         return request.session.get(self.phone_number, False)
     
@@ -41,14 +45,14 @@ class User(AbstractBaseUser):
         try:
             request.session[self.phone_number] = True
             return True
-        except:
+        except Exception as e:
             return False
     
     def logout(self, request):
         try:
             del request.session[self.phone_number]
             return True
-        except:
+        except Exception as e:
             return False
     
 
