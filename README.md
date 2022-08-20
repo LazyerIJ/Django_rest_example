@@ -2,7 +2,7 @@
 
 
 
-### Environment
+### 1. Environment
 
 - docker
 
@@ -12,59 +12,94 @@
 
   
 
-### Run Project
+### 2. Run Project
 
-```
+- **Download Code**
+
+```shell
 $git clone https://github.com/LazyerIJ/Django_rest_example
 ```
 
 
 
-1) Run with docker
+- **config/deploy/secret.json 파일 설정 (Use NaverCloudPlatform)**
+
+```json
+{
+    "phone_number": "",
+    "access_key": "",
+    "service_id": "",
+    "secret_key": ""
+}
+```
+
+
+
+1) **Run with docker**
+
+```shell
+$docker-compose up -d
+```
+
+데이터베이스 스키마 build를 위한 migration 수행
 
 ```
-docker-compose up -d
+docker-compose run --rm --entrypoint python app manage.py migrate
 ```
 
-2. Run from code
 
-```
+
+2. **Run from code**
+
+```shell
 $python -m pip install -r requirements.txt
+$python manage.py migrate
 $python manage.py runserver
+$python manage.py test tests
 ```
 
 
 
 
 
-### Project explanation
+### 3. Project explanation
 
-- 모든 입출력은 REST API를 이용한 JSON 데이터로 이루어집니다.
-- 회원가입 / 문자인증 / 로그인 / 로그아웃 / 비밀번호 재설정 / 정보확인 기능으로 이루어져 있습니다.
+- **모든 입출력은 REST API를 이용한 JSON 데이터로 이루어집니다.**
+- **회원가입 / 문자인증 / 로그인 / 로그아웃 / 비밀번호 재설정 / 정보확인 기능으로 이루어져 있습니다.**
   - 회원가입
-    - POST
+    - POST [phone_number, nick_name, name, email, password]
     - /api/signup/
   - 비밀번호 재설정
-    - UPDATE
+    - UPDATE [phone_number, password]
     - /api/signup
   - 로그인
-    - POST
+    - POST [phone_number, password]
     - /api/login/
   - 로그아웃
-    - POST
+    - POST [phone_number, password]
     - /api/logout/
   - 문자인증
-    - POST
+    - POST [phone_number, auth_number]
     - /api/auth/
   - 정보확인
-    - GET
+    - GET [phone_number]
     - /api/user/
 
 
 
-### Example
+### 4. Project Todo List
 
-1) 회원가입 (POST. /api/signup/)
+- 이메일 인증 및 이메일 로그인 구현
+- 관리자 사용자 (권한 지정 및 사용자 확인) 구현
+
+
+
+
+
+### 5. CURL Example
+
+1. **회원가입 (POST. /api/signup/)**
+
    ```json
    {
        "phone_number": "01012341234",
@@ -88,7 +123,10 @@ $python manage.py runserver
                    }
    ```
 
-2) 문자인증 (POST. /api/auth/)
+   
+
+2. **문자인증 (POST. /api/auth/)**
+
    ```json
    {
        "phone_number": "01012341234",
@@ -105,7 +143,10 @@ $python manage.py runserver
                    }
    ```
 
-3) 로그인 (POST. /api/login/)
+   
+
+3. **로그인 (POST. /api/login/)**
+
    ```
    {
        "phone_number": "01012341234",
@@ -123,14 +164,20 @@ $python manage.py runserver
                    }"
    ```
 
-4) 정보확인 (GET. /api/user/)
+   
+
+4. **정보확인 (GET. /api/user/)**
+
    ```
    curl --location \
                --request GET "http://127.0.0.1:8000/api/user?phone_number=01012341234" \
                --data-raw "
    ```
 
-5) 로그아웃 (POST. /api/logout/)
+   
+
+5. **로그아웃 (POST. /api/logout/)**
+
    ```
    {
        "phone_number": "01012341234",
@@ -150,9 +197,9 @@ $python manage.py runserver
 
    
 
-### Test code
+### 6. Test code
 
-ablyproject/tests/test_api에 테스트 코드가 작성되어 있으며 몇개의 시나리오 테스트가 있습니다.
+ablyproject/tests/test_api.py 에 테스트 코드가 작성되어 있으며 몇개의 시나리오 테스트가 있습니다.
 
 테스트 코드의 출력은 아래와 같습니다.
 
@@ -163,33 +210,36 @@ python manage.py test tests
 
 
 ```
-[*]
+[*]Scenario
         1. 로그인 -> 회원가입을 하지 않았기 때문에 오류 발생
         2. 정보 확인 -> 로그인을 하지 않았기 때문에 오류 발생
 
 >>do_user_login:  400 존재하지 않는 사용자입니다.
 >>do_user_info_get:  400 존재하지 않는 사용자입니다.
-.[*]
+.
+[*]Scenario
         1. 회원가입
         2. 문자인증
         3. 로그인
         4. 정보확인
 
 >>do_user_signup:  200 SMS 인증문자 발송에 성공하였습니다.
->>do_user_auth:  200 SMS 인증에 성공하였습니다.
+>>do_user_auth:  200 SMS 문자인증에 성공하였습니다.
 >>do_user_login:  200 로그인에 성공하였습니다.
 >>do_user_info_get:  201 요청하신 작업이 정상수행 되었습니다.
-.[*]
+.
+[*]Scenario
         1. 회원가입
         2. 문자인증
         3. 로그인
         4. 로그인 -> 이미 로그인 하였으므로 오류발생
-        
+
 >>do_user_signup:  200 SMS 인증문자 발송에 성공하였습니다.
->>do_user_auth:  200 SMS 인증에 성공하였습니다.
+>>do_user_auth:  200 SMS 문자인증에 성공하였습니다.
 >>do_user_login:  200 로그인에 성공하였습니다.
 >>do_user_login:  400 이미 로그인되어 있습니다.
-.[*]
+.
+[*]Scenario
         1. 회원가입
         2. 문자인증
         3. 로그인
@@ -197,23 +247,34 @@ python manage.py test tests
         5. 로그아웃 -> 이미 로그아웃 하였으므로 오류발생
 
 >>do_user_signup:  200 SMS 인증문자 발송에 성공하였습니다.
->>do_user_auth:  200 SMS 인증에 성공하였습니다.
+>>do_user_auth:  200 SMS 문자인증에 성공하였습니다.
 >>do_user_login:  200 로그인에 성공하였습니다.
 >>do_user_logout:  200 로그아웃에 성공하였습니다.
 >>do_user_logout:  400 이미 로그아웃되어 있습니다.
-.[*]
+.
+[*]Scenario
         1. 회원가입
         2. 문자인증
         3. 로그인(잘못된 패스워드) -> 패스워드가 틀렸으므로 오류발생
 
 >>do_user_signup:  200 SMS 인증문자 발송에 성공하였습니다.
->>do_user_auth:  200 SMS 인증에 성공하였습니다.
+>>do_user_auth:  200 SMS 문자인증에 성공하였습니다.
 >>do_user_login_with_wrong_password:  400 패스워드가 잘못 입력되었습니다.
+.
+[*]Scenario
+        1. 회원가입 시 잘못된 형식 email 입력
+
+>>do_user_signup:  400 올바르지 않은 값이 입력되었습니다.(email)
+.
+[*]Scenario
+        1. 회원가입 시 잘못된 형식 phone_number 입력
+
+>>do_user_signup:  400 올바르지 않은 값이 입력되었습니다.(phone_number)
 ```
 
 
 
-### Logging
+### 7. Logging
 
 - 로그는 config/settings/base./py 에서 경로 설정이 가능합니다.
 
@@ -250,5 +311,17 @@ python manage.py test tests
     [2022/08/19 22:37:04][WARNING][django.request:241 ]Bad Request: /api/login/
     ```
 
+  - ablyproject_err.log 예시
+    ```
+    [2022/08/20 11:02:00][INFO][err  :26  ]UserSignupView-post
+    [2022/08/20 11:02:00][ERROR][err  :27  ]
+    Traceback (most recent call last):
+      File "D:\lazyer\busincess\ably\ablyproject\ablyproject\api\views.py", line 24, in applicator
+        return f(*args,**kwargs)
+      File "D:\lazyer\busincess\ably\ablyproject\ablyproject\api\views.py", line 47, in post
+        assert True == False
+    AssertionError
+    ```
+  
     
 
