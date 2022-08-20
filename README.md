@@ -22,7 +22,7 @@ $git clone https://github.com/LazyerIJ/Django_rest_example
 
 
 
-- **config/deploy/secret.json 파일 설정 (Use NaverCloudPlatform)**
+- **Django_rest_example/ablyproject/config/deploy/secret.json 파일 설정 (Use NaverCloudPlatform)**
 
 ```json
 {
@@ -38,6 +38,7 @@ $git clone https://github.com/LazyerIJ/Django_rest_example
 1) **Run with docker**
 
 ```shell
+$cd Django_rest_example/ablyproject/
 $docker-compose up -d
 ```
 
@@ -52,7 +53,9 @@ docker-compose run --rm --entrypoint python app manage.py migrate
 2. **Run from code**
 
 ```shell
+$cd Django_rest_example
 $python -m pip install -r requirements.txt
+$cd ablyproject
 $python manage.py migrate
 $python manage.py runserver
 $python manage.py test tests
