@@ -50,26 +50,15 @@ class AblyErrorInvalidInput(AblyError):
         self.detail = "올바르지 않은 값이 입력되었습니다.({})".format(params)
         
         
-class AblyErrorUserNotExists(AblyError):
+class AblyErrorRequireInput(AblyError):
     info = AblyErrorInfo(
         code="100003", 
-        keyword="ABLY_ERROR_USER_NOT_EXISTS"
+        keyword="ABLY_ERROR_REQUIRE_INPUT"
     )
     
     def __init__(self, params=None):
         super().__init__(params)
-        self.detail = "존재하지 않는 사용자입니다."
-        
-        
-class AblyErrorUserWrongPassword(AblyError):
-    info = AblyErrorInfo(
-        code="100003", 
-        keyword="ABLY_ERROR_USER_WRONG_PASSWORd"
-    )
-    
-    def __init__(self, params=None):
-        super().__init__(params)
-        self.detail = "패스워드가 잘못 입력되었습니다."
+        self.detail = "입력 데이터가 누락되었습니다.({})".format(params)
         
         
 class AblyErrorLoginSuccess(AblyError):
@@ -125,6 +114,28 @@ class AblyErrorNeedLogin(AblyError):
     def __init__(self, params=None):
         super().__init__(params)
         self.detail = "로그인이 필요합니다."
+        
+        
+class AblyErrorUserNotExists(AblyError):
+    info = AblyErrorInfo(
+        code="101006", 
+        keyword="ABLY_ERROR_USER_NOT_EXISTS"
+    )
+    
+    def __init__(self, params=None):
+        super().__init__(params)
+        self.detail = "존재하지 않는 사용자입니다."
+        
+        
+class AblyErrorUserWrongPassword(AblyError):
+    info = AblyErrorInfo(
+        code="101007", 
+        keyword="ABLY_ERROR_USER_WRONG_PASSWORd"
+    )
+    
+    def __init__(self, params=None):
+        super().__init__(params)
+        self.detail = "패스워드가 잘못 입력되었습니다."
 
         
 class AblyErrorSMSSendFail(AblyError):
@@ -180,3 +191,14 @@ class AblyErrorSMSAuthNeeded(AblyError):
     def __init__(self, params=None):
         super().__init__(params)
         self.detail = "SMS 문자인증이 필요합니다."
+        
+        
+class AblyErrorException(AblyError):
+    info = AblyErrorInfo(
+        code="109999", 
+        keyword="ABLY_ERROR_EXCEPTION"
+    )
+    
+    def __init__(self, params=None):
+        super().__init__(params)
+        self.detail = "알 수 없는 에러가 발생하였습니다."

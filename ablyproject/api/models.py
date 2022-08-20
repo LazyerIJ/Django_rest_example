@@ -26,7 +26,7 @@ class User(AbstractBaseUser):
     class Meta:
         db_table = 'user'
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length=11, primary_key=True)
+    phone_number = models.CharField(max_length=13, primary_key=True)
     verified = models.BooleanField(default=False)
     create_at = models.DateTimeField(auto_now_add=True, blank=True)
     update_at = models.DateTimeField(auto_now=True, blank=True)

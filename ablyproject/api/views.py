@@ -1,23 +1,39 @@
 import logging
-
 from django.db import transaction
-from rest_framework.views import APIView
-
+from rest_framework.viewsets import ModelViewSet
 from config.utils import get_config_value
+from api.serializers import (
+    UserInfoSerializer,
+    UserSerializer,
+    UserAuthSerializer
+)
 from api.utils import get_logger_msg_from_ably_error
-from api.data import errors
+from api.data import errors, exceptions
 from api.models import User, UserInfo, UserAuth
 from api.handlers import request_parser as req_parser
 from api.handlers.sms_handler import NaverSMSHandler
 from api.handlers.response_handler import ResponseHandler
-from api.serializers import UserInfoSerializer, UserSerializer, UserAuthSerializer
 
 
 LOGGER_API = logging.getLogger("api")
 LOGGER_ERR = logging.getLogger("err")
 
 
-class UserSignupView(APIView):
+def return_on_failure(value):
+    def decorate(f):
+        def applicator(*args, **kwargs):
+            try:
+                return f(*args,**kwargs)
+            except Exception as e:
+                LOGGER_ERR.info(value)
+                LOGGER_ERR.exception(e)
+                error = errors.AblyErrorException()
+                return ResponseHandler.response_error(error)
+        return applicator
+    return decorate
+
+
+class UserSignupView(ModelViewSet):
     '''
     사용자 회원가입 및 비밀번호 재설정을 담당합니다.
     '''
@@ -25,40 +41,40 @@ class UserSignupView(APIView):
     serializer_class = UserSerializer
 
     @transaction.atomic
+    @return_on_failure("UserSignupView-post")
     def post(self, request, *args, **kwargs):
         '''
         사용자 회원가입
         '''
         phone_number = req_parser.get_phone_number_from_request(request)
         
-        # phone_number 중복 체크 
+        # phone_number 중복 체크
         is_exists, _ = User.is_exists_phone_number(phone_number)
         if is_exists:
             error = errors.AblyErrorUserDuplicated()
             LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
         
-        # request -> 사용자 로그인 정보 검증 
+        # request -> 사용자 로그인 정보 검증
         user_serializer = UserSerializer(data=request.data) 
         if not user_serializer.is_valid():
+            error = exceptions.transform_serializer_error_to_ablyerror(user_serializer)
             LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
-            error = errors.AblyErrorInvalidInput(params="")
             return ResponseHandler.response_error(error)
 
         # request -> 사용자 일반 정보 검증
         user_info_serializer = UserInfoSerializer(data=request.data) 
         if not user_info_serializer.is_valid():
             LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
-            error = errors.AblyErrorInvalidInput(params="")
+            error = errors.AblyErrorInvalidInput()
             return ResponseHandler.response_error(error)
 
         # 인증 문자 발송
         validated_phone_number = user_serializer.validated_data.get("phone_number")
         user_auth, _ = UserAuth.objects.update_or_create(phone_number=validated_phone_number)
         naver_sms_handler = NaverSMSHandler(user_auth.phone_number, user_auth.auth_number)
-        
+
         # 인증 문자 발송 결과 반환 
-        #result = naver_sms_handler.send_sms()
         result = naver_sms_handler.send_sms() if get_config_value("ACCESS_KEY") == "service" else True
         if not result:
             error = errors.AblyErrorSMSSendFail()
@@ -74,6 +90,7 @@ class UserSignupView(APIView):
         return ResponseHandler.response_success(error)
     
     @transaction.atomic
+    @return_on_failure("UserSignupView-update")
     def update(self, request, *args, **kwargs):
         '''
         사용자 비밀번호 재설정
@@ -81,14 +98,14 @@ class UserSignupView(APIView):
         phone_number = req_parser.get_phone_number_from_request(request)
         password = req_parser.get_password_from_request(request)
         
-        # 사용자 확인 
+        # 사용자 확인
         is_exists, user = User.is_exists_phone_number(phone_number)
         if not is_exists:
             error = errors.AblyErrorUserNotExists()
             LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
         
-        # 비밀번호 재설정 
+        # 비밀번호 재설정
         user.set_password(password)
         user.verified = False
         user.save()
@@ -109,7 +126,7 @@ class UserSignupView(APIView):
         return ResponseHandler.response_success(error)
         
         
-class UserAuthView(APIView):
+class UserAuthView(ModelViewSet):
     '''
     사용자 회원가입 및 비밀번호 재설정에 따른 문자 인증을 담당합니다.
     '''
@@ -117,6 +134,7 @@ class UserAuthView(APIView):
     serializer_class = UserAuthSerializer
     
     @transaction.atomic
+    @return_on_failure("UserAuthView-post")
     def post(self, request, *args, **kwargs):
         '''
         인증 문자 확인
@@ -145,13 +163,15 @@ class UserAuthView(APIView):
         return ResponseHandler.response_success(error)
 
 
-class UserLoginView(APIView):
+class UserLoginView(ModelViewSet):
     '''
     사용자 로그인을 담당합니다
     '''
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    @transaction.atomic
+    @return_on_failure("UserLoginView-post")
     def post(self, request, *args, **kwargs):
         '''
         사용자 로그인
@@ -191,13 +211,15 @@ class UserLoginView(APIView):
         return ResponseHandler.response_success(error)
     
     
-class UserLogoutView(APIView):
+class UserLogoutView(ModelViewSet):
     '''
     사용자 로그아웃을 담당합니다
     '''
     queryset = User.objects.all()
     serializer_class = UserSerializer 
 
+    @transaction.atomic
+    @return_on_failure("UserLogoutView-post")
     def post(self, request, *args, **kwargs):
         '''
         사용자 로그아웃
@@ -231,7 +253,7 @@ class UserLogoutView(APIView):
         return ResponseHandler.response_success(error)
 
 
-class UserInfoDetailView(APIView):
+class UserInfoDetailView(ModelViewSet):
     '''
     사용자 정보 확인을 담당합니다.
     '''
@@ -239,13 +261,14 @@ class UserInfoDetailView(APIView):
     serializer_class = UserInfoSerializer
 
     @transaction.atomic
+    @return_on_failure("UserInfoDetailView-get")
     def get(self, request, *args, **kwargs):
         '''
         사용자 정보 확인
         '''
         phone_number = req_parser.get_phone_number_from_params(request)
         
-        # phone_number 존재 확인 
+        # phone_number 존재 확인
         is_exists, user = User.is_exists_phone_number(phone_number)
         if not is_exists:
             error = errors.AblyErrorUserNotExists()
@@ -258,7 +281,7 @@ class UserInfoDetailView(APIView):
             LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))
             return ResponseHandler.response_error(error)
         
-        # 사용자 정보 반환 
+        # 사용자 정보 반환
         user_info = UserInfoDetailView.queryset.get(user=user)
         serializer = UserInfoSerializer(user_info)
         error = errors.AblyErrorServiceOK()
