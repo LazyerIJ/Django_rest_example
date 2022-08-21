@@ -2,14 +2,17 @@ from django.test import TestCase, Client
 from rest_framework import status
 
 
+TEST_PHONE_NUMBER = "01012341234"
+
+
 class APIUserTests(TestCase):
     
     def do_user_info_get(self, client):
         curl = '''curl --location \
-            --request GET "http://127.0.0.1:8000/api/user?phone_number=01012341234" \
+            --request GET "http://127.0.0.1:8000/api/user?phone_number=01025467722" \
             --data-raw ""'''
         data = {
-            "phone_number": "01012341234"
+            "phone_number": "01025467722"
         }
         response = client.get("/api/user", data=data, follow=True)
         print('>>do_user_info_get: ', response.status_code, response.data.get('detail'))
@@ -20,11 +23,11 @@ class APIUserTests(TestCase):
                 --request POST "http://127.0.0.1:8000/api/login/" \
                 --header "Content-Type: application/json" \
                 --data-raw "{
-                \"phone_number\": \"01012341234\",
+                \"phone_number\": \"01025467722\",
                 \"password\": \"4321\"
                 }"'''
         data = {
-            "phone_number": "01012341234",
+            "phone_number": "01025467722",
             "password": "1234"
         }
         response = client.post("/api/login/", data=data, follow=True)
@@ -36,11 +39,11 @@ class APIUserTests(TestCase):
                 --request POST "http://127.0.0.1:8000/api/login/" \
                 --header "Content-Type: application/json" \
                 --data-raw "{
-                \"phone_number\": \"01012341234\",
+                \"phone_number\": \"01025467722\",
                 \"password\": \"4321\"
                 }"'''
         data = {
-            "phone_number": "01012341234",
+            "phone_number": "01025467722",
             "password": "4321"
         }
         response = client.post("/api/login/", data=data, follow=True)
@@ -52,11 +55,11 @@ class APIUserTests(TestCase):
                 --request POST "http://127.0.0.1:8000/api/logout/" \
                 --header "Content-Type: application/json" \
                 --data-raw "{
-                \"phone_number\": \"01012341234\",
+                \"phone_number\": \"01025467722\",
                 \"password\": \"1234\"
                 }"'''
         data = {
-            "phone_number": "01012341234",
+            "phone_number": "01025467722",
             "password": "1234"
         }
         response = client.post("/api/logout/", data=data, follow=True)
@@ -68,14 +71,14 @@ class APIUserTests(TestCase):
                 --request POST "http://127.0.0.1:8000/api/signup/" \
                 --header "Content-Type: application/json" \
                 --data-raw "{
-                \"phone_number\": \"01012341234\",
+                \"phone_number\": \"01025467722\",
                 \"password\": \"1234\",
                 \"email\": \"ablyproject@gmail.com\",
                 \"nickname\": \"lazyer\",
                 \"name\": \"123\"
                 }"'''
         data = {
-            "phone_number": "01012341234",
+            "phone_number": "01025467722",
             "password": "1234",
             "email": "ablyproject@gmail.com",
             "nickname": "lazyer",
@@ -90,14 +93,14 @@ class APIUserTests(TestCase):
                 --request POST "http://127.0.0.1:8000/api/signup/" \
                 --header "Content-Type: application/json" \
                 --data-raw "{
-                \"phone_number\": \"01012341234\",
+                \"phone_number\": \"01025467722\",
                 \"password\": \"1234\",
                 \"email\": \"www.ablyproject.com\",
                 \"nickname\": \"lazyer\",
                 \"name\": \"123\"
                 }"'''
         data = {
-            "phone_number": "01012341234",
+            "phone_number": "01025467722",
             "password": "1234",
             "email": "www.ablyproject.com",
             "nickname": "lazyer",
@@ -133,11 +136,11 @@ class APIUserTests(TestCase):
         curl = '''curl --location --request POST "http://127.0.0.1:8000/api/auth/" \
                 --header "Content-Type: application/json" \
                 --data-raw "{
-                \"phone_number\": \"01012341234\",
+                \"phone_number\": \"01025467722\",
                 \"auth_number\": \"0000\"
                 }"'''
         data = {
-            "phone_number": "01012341234",
+            "phone_number": "01025467722",
             "auth_number": "0000"
         }
         response = client.post("/api/auth/", data=data, follow=True)

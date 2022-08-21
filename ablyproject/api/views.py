@@ -75,7 +75,9 @@ class UserSignupView(ModelViewSet):
         naver_sms_handler = NaverSMSHandler(user_auth.phone_number, user_auth.auth_number)
 
         # 인증 문자 발송 결과 반환 
-        result = naver_sms_handler.send_sms() if get_config_value("ACCESS_KEY") == "service" else True
+        # result = naver_sms_handler.send_sms() if get_config_value("ACCESS_KEY") == "service" else True
+        result = naver_sms_handler.send_sms()
+        print(result, result.text)
         if not result:
             error = errors.AblyErrorSMSSendFail()
             LOGGER_API.info(get_logger_msg_from_ably_error(error, phone_number))

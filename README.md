@@ -20,7 +20,15 @@
 $git clone https://github.com/LazyerIJ/Django_rest_example
 ```
 
+- **Django_rest_example/ablyproject/config/deploy/config.json 파일 설정**
+  - ACCESS_TYPE 이 "dev"일 경우 인증문자는 "0000"으로 고정됩니다.
 
+```
+{
+    "ACCESS_TYPE": "service",
+    "CONFIG_PATH": "logs"
+}
+```
 
 - **Django_rest_example/ablyproject/config/deploy/secret.json 파일 설정 (Use NaverCloudPlatform)**
 
@@ -87,6 +95,7 @@ $python manage.py test tests
   - 정보확인
     - GET [phone_number]
     - /api/user/
+- 
 
 
 
@@ -202,12 +211,24 @@ $python manage.py test tests
 
 ### 6. Test code
 
-ablyproject/tests/test_api.py 에 테스트 코드가 작성되어 있으며 몇개의 시나리오 테스트가 있습니다.
+- ablyproject/tests/test_api.py 에 테스트 코드가 작성되어 있으며 몇개의 시나리오 테스트가 있습니다.
 
-테스트 코드의 출력은 아래와 같습니다.
+- 테스트를 위하여 인증문자를 "0000"으로 고정하기 위하여 
+  **Django_rest_example/ablyproject/config/deploy/config.json** 의 ACCESS_TYPE을 아래와 같이 "dev"로 고정해주세요
+
+  ```
+  {
+      "ACCESS_TYPE": "dev",
+      "LOG_PATH": "logs"
+  }
+  ```
+
+  
+
+테스트 코드는 아래 명령어로 실행 가능합니다.
 
 ```
-python manage.py test tests
+$python manage.py test tests
 ```
 
 
@@ -279,7 +300,7 @@ python manage.py test tests
 
 ### 7. Logging
 
-- 로그는 config/settings/base./py 에서 경로 설정이 가능합니다.
+- 로그는 config/settings/base.py 에서 경로 설정이 가능합니다.
 
 - 기본적으로 logs 폴더 아래에 생성됩니다.
 
